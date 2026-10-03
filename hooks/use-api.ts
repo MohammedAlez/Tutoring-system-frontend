@@ -2,7 +2,13 @@
 // Thin wrapper so every resource hook doesn't repeat the same fetch/JSON boilerplate.
 // All requests go through /api/proxy/* (see app/api/proxy/[...path]/route.ts),
 // never directly to NEXT_PUBLIC_API_URL from the browser.
-import { useQuery, useMutation, useQueryClient, type QueryKey } from '@tanstack/react-query'
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  type QueryKey,
+  type UseQueryOptions,
+} from '@tanstack/react-query'
 
 async function proxyFetch<T>(path: string, init?: RequestInit): Promise<T> {
   console.log("start fetching")
@@ -15,14 +21,19 @@ async function proxyFetch<T>(path: string, init?: RequestInit): Promise<T> {
     const body = await res.json().catch(() => ({}))
     throw new Error(body.message || `Request failed: ${res.status}`)
   }
-  
+
   return res.json()
 }
 
-export function useApiQuery<T>(queryKey: QueryKey, path: string) {
-  return useQuery({
+export function useApiQuery<T>(
+  queryKey: QueryKey,
+  path: string,
+  options?: Omit<UseQueryOptions<T, Error, T>, 'queryKey' | 'queryFn'>
+) {
+  return useQuery<T, Error, T>({
     queryKey,
     queryFn: () => proxyFetch<T>(path),
+    ...options,
   })
 }
 

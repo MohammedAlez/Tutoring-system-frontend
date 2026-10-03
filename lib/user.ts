@@ -11,6 +11,12 @@ export interface CurrentUser {
   lastName: string
   phone: string
   status: string
+  role: Role
+  school?: {
+    id?: string
+    name?: string
+    [key: string]: unknown
+  } | null
   // add whatever else your /auth/me payload includes
 }
 
