@@ -19,7 +19,7 @@ export function NavMain({
     title: string
     url: string
     icon?: React.ReactNode, 
-    roles: string[] // Add a roles property to specify which roles can access this item
+    // roles: string[] // Add a roles property to specify which roles can access this item
   }[]
 }) {
   const pathname = usePathname()
@@ -27,10 +27,7 @@ export function NavMain({
   const currentUser = useCurrentUser() 
   
   console.log(currentUser) // Log the current user object to the console
-  
-  // const userRole = 'STUDENT' 
-  // const userRole = 'TEACHER' 
-  const userRole = currentUser?.role!
+
   
   return (
     <SidebarGroup>
@@ -39,11 +36,6 @@ export function NavMain({
         {items.map((item) => {
           const isActive = pathname === item.url
 
-          // Check if the user has access to the item based on their role
-          const hasAccess = !item.roles || item.roles.includes(userRole)
-          if (!hasAccess) {
-            return null // Skip rendering this item if the user doesn't have access
-          }
           return (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
