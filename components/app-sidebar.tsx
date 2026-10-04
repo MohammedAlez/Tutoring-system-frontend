@@ -70,11 +70,11 @@ const data = {
       url: "/dashboard/sessions",
       icon: <PresentationIcon size={24} />,
     },
-    {
-      title: "Attendance",
-      url: "/dashboard/attendance",
-      icon: <ClipboardCheckIcon size={24} />,
-    },
+    // {
+    //   title: "Attendance",
+    //   url: "/dashboard/attendance",
+    //   icon: <ClipboardCheckIcon size={24} />,
+    // },
     {
       title: "Payments",
       url: "/dashboard/payments",
