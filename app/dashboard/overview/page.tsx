@@ -1,30 +1,31 @@
+// app/dashboard/page.tsx
 "use client";
 
 import { MetricCardGrid } from "./components/metric-card-grid";
-import { TodaySessionsWidget } from "./components/today-sessions-widget";
+import { TodayScheduleWidget } from "./components/today-schedule-widget";
 import { UnpaidStudentsWidget } from "./components/unpaid-students-widget";
 import { QuickActionButtonGroup } from "./components/quick-action-button-group";
 import { 
   useDashboardStats, 
-  useSessions, 
-  usePayments 
+  useTodaySchedule, 
+  usePendingPayments 
 } from "@/lib/queries/dashboard";
 
 export default function DashboardPage() {
-  const todayFormatted = new Date().toISOString().split("T")[0];
-
-  // Client-side fetching via proxy hooks
+  // Client-side fetching via proxy hooks following the tools usage guide
   const { data: stats, isLoading: isLoadingStats } = useDashboardStats();
-  const { data: sessionsData, isLoading: isLoadingSessions } = useSessions(todayFormatted);
-  const { data: paymentsData, isLoading: isLoadingPayments } = usePayments("PENDING", 5);
+  const { data: scheduleData, isLoading: isLoadingSchedule } = useTodaySchedule();
+  const { data: paymentsResponse, isLoading: isLoadingPayments } = usePendingPayments(5);
 
+  console.log("scheduleData:", scheduleData);
+  console.log("paymentsResponse:", paymentsResponse);
   return (
     <div className="space-y-6 p-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Tutor Dashboard</h1>
           <p className="text-sm text-muted-foreground">
-            Overview of your active students, today's schedule, and pending payments.
+            Overview of active students, today's schedule, and pending payments.
           </p>
         </div>
         <QuickActionButtonGroup />
@@ -36,13 +37,13 @@ export default function DashboardPage() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
-        <TodaySessionsWidget 
-          sessions={sessionsData?.data} 
-          isLoading={isLoadingSessions} 
+        <TodayScheduleWidget 
+          schedules={scheduleData?.data} 
+          isLoading={isLoadingSchedule} 
         />
         <UnpaidStudentsWidget
-          payments={paymentsData?.data}
-          totalOutstanding={paymentsData?.totalOutstanding}
+          payments={paymentsResponse?.data.payments}
+          totalOutstanding={paymentsResponse?.data.stats.pendingAmount}
           isLoading={isLoadingPayments}
         />
       </div>

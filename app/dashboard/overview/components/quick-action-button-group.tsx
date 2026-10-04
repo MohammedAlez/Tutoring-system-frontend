@@ -7,8 +7,9 @@ export function QuickActionButtonGroup() {
     <div className="flex flex-wrap items-center gap-2">
       <Button
         size="sm"
+        nativeButton={false}
         render={
-          <Link href="/dashboard/students/new">
+          <Link href="/dashboard/students">
             <UserPlus className="mr-2 h-4 w-4" /> Add Student
           </Link>
         }
@@ -16,8 +17,9 @@ export function QuickActionButtonGroup() {
       <Button
         size="sm"
         variant="outline"
+        nativeButton={false}
         render={
-          <Link href="/dashboard/groups/new">
+          <Link href="/dashboard/groups">
             <FolderPlus className="mr-2 h-4 w-4" /> Create Group
           </Link>
         }
@@ -25,8 +27,9 @@ export function QuickActionButtonGroup() {
       <Button
         size="sm"
         variant="outline"
+        nativeButton={false}
         render={
-          <Link href="/dashboard/payments/new">
+          <Link href="/dashboard/payments">
             <CreditCard className="mr-2 h-4 w-4" /> Record Payment
           </Link>
         }

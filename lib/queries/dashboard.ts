@@ -1,10 +1,13 @@
 // lib/queries/dashboard.ts
 import { useApiQuery } from "@/hooks/use-api";
 
-// ============================================================
-// TYPES
-// ============================================================
+// --- API Response Envelopes ---
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
 
+// --- Data Models ---
 export interface DashboardStats {
   totalStudents: number;
   activeStudents: number;
@@ -14,85 +17,87 @@ export interface DashboardStats {
   monthlyRevenue: number;
 }
 
-export interface SessionGroup {
+export interface ScheduleSlot {
   id: string;
-  name: string;
-  type: "GROUP" | "INDIVIDUAL";
-  subject?: string | null;
-  level?: string | null;
-}
-
-export interface Session {
-  id: string;
+  tutorId: string;
   groupId: string;
-  scheduledStart: string;
-  scheduledEnd: string;
-  status: "SCHEDULED" | "COMPLETED" | "CANCELLED";
-  room?: string | null;
+  dayOfWeek:
+    | "MONDAY"
+    | "TUESDAY"
+    | "WEDNESDAY"
+    | "THURSDAY"
+    | "FRIDAY"
+    | "SATURDAY"
+    | "SUNDAY";
+  startTime: string;
+  endTime: string;
+  room: string | null;
   isOnline: boolean;
-  group: SessionGroup;
+  group: {
+    id: string;
+    name: string;
+    type: "GROUP" | "INDIVIDUAL" | string;
+    subject: string;
+    level: string;
+  };
 }
 
-export interface SessionsResponse {
-  data: Session[];
-}
-
-export interface PaymentStudent {
-  id: string;
-  firstName: string;
-  lastName: string;
-  phone?: string | null;
-}
-
-export interface Payment {
+export interface PendingPayment {
   id: string;
   studentId: string;
   amount: number;
   status: "PENDING" | "PAID" | "OVERDUE" | "CANCELLED";
-  dueDate?: string | null;
+  dueDate: string;
+  paidAt?: string | null;
   periodStart?: string | null;
   periodEnd?: string | null;
-  student: PaymentStudent;
+  paymentMethod?: string | null;
+  note?: string | null;
+  student: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    phone?: string | null;
+  };
+  group?: {
+    id: string;
+    name: string;
+    subject: string;
+  } | null;
 }
 
-export interface PaymentsResponse {
-  data: Payment[];
-  totalOutstanding: number;
+export interface PaymentsData {
+  stats: {
+    totalCollected: number;
+    pendingAmount: number;
+    overdueAmount: number;
+    totalInvoices: number;
+  };
+  payments: PendingPayment[];
 }
 
-// ============================================================
-// QUERY KEYS
-// ============================================================
+// --- Hooks ---
 
-export const dashboardKeys = {
-  all: ["dashboard"] as const,
-  stats: () => [...dashboardKeys.all, "stats"] as const,
-  sessions: (date: string) => [...dashboardKeys.all, "sessions", date] as const,
-  payments: (status?: string, limit?: number) =>
-    [...dashboardKeys.all, "payments", { status, limit }] as const,
-};
-
-// ============================================================
-// CLIENT HOOKS (via /api/proxy)
-// ============================================================
-
+/** Fetches overall stats for MetricCardGrid */
 export function useDashboardStats() {
   return useApiQuery<DashboardStats>(
-    dashboardKeys.stats(),
+    ["dashboard-stats"],
     "/dashboard-stats"
   );
 }
 
-export function useSessions(date: string) {
-  return useApiQuery<SessionsResponse>(
-    dashboardKeys.sessions(date),
-    `/sessions?date=${date}`
+/** Fetches weekly recurring schedule slots */
+export function useTodaySchedule() {
+  return useApiQuery<ApiResponse<ScheduleSlot[]>>(
+    ["schedules"],
+    "/schedules"
   );
 }
 
-export function usePayments(status = "PENDING", limit = 10) {
-  return useApiQuery<PaymentsResponse>(
-    dashboardKeys.payments(status, limit),
-    `/payments?status=${status}&limit=${limit}`
+/** Fetches pending payment records and aggregated financial stats */
+export function usePendingPayments(limit: number = 5) {
+  return useApiQuery<ApiResponse<PaymentsData>>(
+    ["payments", "PENDING", limit],
+    `/payments?status=PENDING&limit=${limit}`
   );
 }

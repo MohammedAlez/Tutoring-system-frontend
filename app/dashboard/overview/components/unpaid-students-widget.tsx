@@ -4,15 +4,19 @@ import Link from "next/link";
 import { AlertCircle, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Payment } from "@/lib/queries/dashboard";
+import { PendingPayment } from "@/lib/queries/dashboard";
 
 interface UnpaidStudentsWidgetProps {
-  payments?: Payment[];
+  payments?: PendingPayment[];
   totalOutstanding?: number;
   isLoading: boolean;
 }
 
-export function UnpaidStudentsWidget({ payments = [], totalOutstanding = 0, isLoading }: UnpaidStudentsWidgetProps) {
+export function UnpaidStudentsWidget({
+  payments = [],
+  totalOutstanding = 0,
+  isLoading,
+}: UnpaidStudentsWidgetProps) {
   return (
     <Card className="col-span-1 lg:col-span-3">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -21,17 +25,21 @@ export function UnpaidStudentsWidget({ payments = [], totalOutstanding = 0, isLo
             <AlertCircle className="h-5 w-5" /> Unpaid Balances
           </CardTitle>
           <CardDescription>
-            Total Pending: <span className="font-semibold text-foreground">{totalOutstanding.toLocaleString()} DA</span>
+            Total Pending:{" "}
+            <span className="font-semibold text-foreground">
+              {totalOutstanding.toLocaleString()} DA
+            </span>
           </CardDescription>
         </div>
         <Button
-            variant="ghost"
-            size="sm"
-            render={
-                <Link href="/dashboard/payments?status=PENDING" className="flex items-center gap-1">
-                View All <ChevronRight className="h-4 w-4" />
-                </Link>
-            }
+          variant="ghost"
+          size="sm"
+          nativeButton={false}
+          render={
+            <Link href="/dashboard/payments?status=PENDING" className="flex items-center gap-1">
+              View All <ChevronRight className="h-4 w-4" />
+            </Link>
+          }
         />
       </CardHeader>
       <CardContent>
@@ -47,7 +55,7 @@ export function UnpaidStudentsWidget({ payments = [], totalOutstanding = 0, isLo
           </div>
         ) : (
           <div className="space-y-3">
-            {payments.map((payment) => (
+            {payments?.map((payment) => (
               <div
                 key={payment.id}
                 className="flex items-center justify-between p-3 rounded-lg border bg-muted/40"
@@ -64,16 +72,17 @@ export function UnpaidStudentsWidget({ payments = [], totalOutstanding = 0, isLo
                   <p className="font-bold text-sm text-amber-600">
                     {payment.amount.toLocaleString()} DA
                   </p>
-                    <Button
-                        variant="link"
-                        size="sm"
-                        className="h-auto p-0 text-xs"
-                        render={
-                            <Link href={`/dashboard/payments?studentId=${payment.student.id}`}>
-                            Record Payment
-                            </Link>
-                        }
-                    />
+                  <Button
+                    variant="link"
+                    size="sm"
+                    nativeButton={false}
+                    className="h-auto p-0 text-xs"
+                    render={
+                      <Link href={`/dashboard/payments?search=${payment.student.firstName}`}>
+                        Record Payment
+                      </Link>
+                    }
+                  />
                 </div>
               </div>
             ))}
