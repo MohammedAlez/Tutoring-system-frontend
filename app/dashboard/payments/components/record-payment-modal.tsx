@@ -67,9 +67,10 @@ export function RecordPaymentModal({ open, onOpenChange, activeMonth }: RecordPa
     paymentsQueryKey({ month: activeMonth })
   );
 
-  const handleStudentSelect = (studentId: string) => {
-    setSelectedStudentId(studentId);
-    const student = students.find((s) => s.id === studentId);
+  const handleStudentSelect = (studentId: string | null) => {
+    const id = studentId ?? '';
+    setSelectedStudentId(id);
+    const student = students.find((s) => s.id === id);
     
     // Auto-assign primary group if student is enrolled in one
     if (student?.groupStudents && student.groupStudents.length > 0) {
@@ -146,7 +147,10 @@ export function RecordPaymentModal({ open, onOpenChange, activeMonth }: RecordPa
           {selectedStudent && (
             <div className="space-y-2">
               <Label htmlFor="groupSelect">Enrolled Group</Label>
-              <Select value={selectedGroupId} onValueChange={setSelectedGroupId}>
+              <Select
+                value={selectedGroupId}
+                onValueChange={(val) => setSelectedGroupId(val ?? '')}
+              >
                 <SelectTrigger id="groupSelect" className="w-full">
                   <SelectValue placeholder="Select group">
                     {selectedStudent.groupStudents?.find((gs) => gs.group.id === selectedGroupId)?.group.name}
@@ -178,7 +182,10 @@ export function RecordPaymentModal({ open, onOpenChange, activeMonth }: RecordPa
 
             <div className="space-y-2">
               <Label>Payment Status</Label>
-              <Select value={status} onValueChange={(val) => setStatus(val as PaymentStatus)}>
+              <Select
+                value={status}
+                onValueChange={(val) => val && setStatus(val as PaymentStatus)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -193,7 +200,10 @@ export function RecordPaymentModal({ open, onOpenChange, activeMonth }: RecordPa
           {status === 'PAID' && (
             <div className="space-y-2">
               <Label>Payment Method</Label>
-              <Select value={paymentMethod} onValueChange={(val) => setPaymentMethod(val as PaymentMethod)}>
+              <Select
+                value={paymentMethod}
+                onValueChange={(val) => val && setPaymentMethod(val as PaymentMethod)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

@@ -28,38 +28,126 @@ export function GroupDetailClient({ groupId, initialGroup }: GroupDetailClientPr
     <div className="space-y-6">
       <GroupHeader group={group} />
 
-      <Tabs defaultValue="students" className="w-full space-y-4">
-        <TabsList className="grid w-full grid-cols-4 max-w-2xl bg-muted/60 p-1">
-          <TabsTrigger value="students" className="gap-2 text-xs font-medium">
-            <Users className="h-4 w-4" /> Students ({group._count?.students ?? group.students.length})
-          </TabsTrigger>
-          <TabsTrigger value="schedules" className="gap-2 text-xs font-medium">
-            <Clock className="h-4 w-4" /> Schedules ({group.schedules.length})
-          </TabsTrigger>
-          <TabsTrigger value="sessions" className="gap-2 text-xs font-medium">
-            <Calendar className="h-4 w-4" /> Sessions ({group._count?.sessions ?? 0})
-          </TabsTrigger>
-          <TabsTrigger value="attendance" className="gap-2 text-xs font-medium">
-            <BarChart3 className="h-4 w-4" /> Attendance Stats
-          </TabsTrigger>
-        </TabsList>
+<Tabs defaultValue="students" className="w-full space-y-6">
+  <TabsList className="h-auto w-full max-w-3xl justify-start gap-1.5 rounded-2xl border bg-card p-7 px-1.5 shadow-sm">
+    <TabsTrigger
+      value="students"
+      className="
+        group gap-2.5 rounded-xl px-6 py-5 text-sm font-medium
+        text-muted-foreground transition-all
+        hover:text-foreground
+        data-[state=active]:bg-primary
+        data-[state=active]:text-primary-foreground
+        data-[state=active]:shadow-md
+        data-[state=active]:shadow-primary/30
+      "
+    >
+      <Users className="h-4.5 w-4.5" />
 
-        <TabsContent value="students" className="space-y-4">
-          <GroupStudentsTab groupId={groupId} students={group.students} />
-        </TabsContent>
+      <span>Students</span>
 
-        <TabsContent value="schedules" className="space-y-4">
-          <RecurringScheduleTab groupId={groupId} schedules={group.schedules} />
-        </TabsContent>
+      <span
+        className="
+          rounded-xl bg-black/5 px-2 py-0.5 text-xs tabular-nums
+          group-data-[state=active]:bg-white/20
+        "
+      >
+        {group._count?.students ?? group.students.length}
+      </span>
+    </TabsTrigger>
 
-        <TabsContent value="sessions" className="space-y-4">
-          <GroupSessionsTab groupId={groupId} />
-        </TabsContent>
+    <TabsTrigger
+      value="schedules"
+      className="
+        group gap-2.5 rounded-xl px-6 py-5 text-sm font-medium
+        text-muted-foreground transition-all
+        hover:text-foreground
+        data-[state=active]:bg-primary
+        data-[state=active]:text-primary-foreground
+        data-[state=active]:shadow-md
+        data-[state=active]:shadow-primary/30
+      "
+    >
+      <Clock className="h-4.5 w-4.5" />
 
-        <TabsContent value="attendance" className="space-y-4">
-          <GroupAttendanceStatsTab groupId={groupId} />
-        </TabsContent>
-      </Tabs>
+      <span>Schedules</span>
+
+      <span
+        className="
+          rounded-xl bg-black/5 px-2 py-0.5 text-xs tabular-nums
+          group-data-[state=active]:bg-white/20
+        "
+      >
+        {group.schedules.length}
+      </span>
+    </TabsTrigger>
+
+    <TabsTrigger
+      value="sessions"
+      className="
+        group gap-2.5 rounded-xl px-6 py-5 text-sm font-medium
+        text-muted-foreground transition-all
+        hover:text-foreground
+        data-[state=active]:bg-primary
+        data-[state=active]:text-primary-foreground
+        data-[state=active]:shadow-md
+        data-[state=active]:shadow-primary/30
+      "
+    >
+      <Calendar className="h-4.5 w-4.5" />
+
+      <span>Sessions</span>
+
+      <span
+        className="
+          rounded-xl bg-black/5 px-2 py-0.5 text-xs tabular-nums
+          group-data-[state=active]:bg-white/20
+        "
+      >
+        {group._count?.sessions ?? 0}
+      </span>
+    </TabsTrigger>
+
+    <TabsTrigger
+      value="attendance"
+      className="
+        group gap-2.5 rounded-xl px-6 py-5 text-sm font-medium
+        text-muted-foreground transition-all
+        hover:text-foreground
+        data-[state=active]:bg-primary
+        data-[state=active]:text-primary-foreground
+        data-[state=active]:shadow-md
+        data-[state=active]:shadow-primary/30
+      "
+    >
+      <BarChart3 className="h-4.5 w-4.5" />
+
+      <span>Attendance</span>
+    </TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="students" className="space-y-4">
+    <GroupStudentsTab
+      groupId={groupId}
+      students={group.students}
+    />
+  </TabsContent>
+
+  <TabsContent value="schedules" className="space-y-4">
+    <RecurringScheduleTab
+      groupId={groupId}
+      schedules={group.schedules}
+    />
+  </TabsContent>
+
+  <TabsContent value="sessions" className="space-y-4">
+    <GroupSessionsTab groupId={groupId} />
+  </TabsContent>
+
+  <TabsContent value="attendance" className="space-y-4">
+    <GroupAttendanceStatsTab groupId={groupId} />
+  </TabsContent>
+</Tabs>
     </div>
   );
 }
