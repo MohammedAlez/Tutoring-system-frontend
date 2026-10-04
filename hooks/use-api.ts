@@ -11,7 +11,7 @@ import {
 } from '@tanstack/react-query'
 
 async function proxyFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  console.log("start fetching")
+  console.log("start fetching", path)
   const res = await fetch(`/api/proxy${path}`, {
     ...init,
     headers: { 'Content-Type': 'application/json', ...init?.headers },
