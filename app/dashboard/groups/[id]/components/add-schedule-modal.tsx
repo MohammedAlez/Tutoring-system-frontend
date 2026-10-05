@@ -22,8 +22,9 @@ export function AddScheduleModal({ groupId, open, onOpenChange }: AddScheduleMod
   const [endTime, setEndTime] = useState("19:00");
   const [room, setRoom] = useState("");
   const [isOnline, setIsOnline] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Add schedule mutation[cite: 10, 15]
+  // Add schedule mutation
   const addScheduleMutation = useApiMutation<void, {
     dayOfWeek: string;
     startTime: string;
@@ -31,13 +32,21 @@ export function AddScheduleModal({ groupId, open, onOpenChange }: AddScheduleMod
     room?: string;
     isOnline: boolean;
   }>(
-    `/groups/${groupId}/schedules`, // Endpoint from docs[cite: 15]
+    `/groups/${groupId}/schedules`,
     "POST",
     groupKeys.detail(groupId)
   );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
+    // Check if end time is greater than start time
+    if (endTime <= startTime) {
+      setError("End time must be later than start time.");
+      return;
+    }
+
     addScheduleMutation.mutate(
       {
         dayOfWeek,
@@ -65,19 +74,19 @@ export function AddScheduleModal({ groupId, open, onOpenChange }: AddScheduleMod
           <div className="space-y-1.5">
             <Label className="text-xs font-semibold">Day of Week</Label>
             <Select 
-                value={dayOfWeek} 
-                onValueChange={(val) => setDayOfWeek(val ?? "")}
-                >
-                <SelectTrigger className="text-xs">
-                    <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                    {["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"].map((day) => (
-                    <SelectItem key={day} value={day} className="text-xs">
-                        {day}
-                    </SelectItem>
-                    ))}
-                </SelectContent>
+              value={dayOfWeek} 
+              onValueChange={(val) => setDayOfWeek(val ?? "")}
+            >
+              <SelectTrigger className="text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"].map((day) => (
+                  <SelectItem key={day} value={day} className="text-xs">
+                    {day}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
           </div>
 
@@ -87,7 +96,10 @@ export function AddScheduleModal({ groupId, open, onOpenChange }: AddScheduleMod
               <Input
                 type="time"
                 value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
+                onChange={(e) => {
+                  setStartTime(e.target.value);
+                  setError(null);
+                }}
                 required
                 className="text-xs"
               />
@@ -97,12 +109,20 @@ export function AddScheduleModal({ groupId, open, onOpenChange }: AddScheduleMod
               <Input
                 type="time"
                 value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
+                onChange={(e) => {
+                  setEndTime(e.target.value);
+                  setError(null);
+                }}
                 required
                 className="text-xs"
               />
             </div>
           </div>
+
+          {/* Validation Error Message */}
+          {error && (
+            <p className="text-xs font-medium text-destructive">{error}</p>
+          )}
 
           <div className="flex items-center justify-between rounded-lg border p-3">
             <Label className="text-xs font-semibold cursor-pointer" htmlFor="online-toggle">

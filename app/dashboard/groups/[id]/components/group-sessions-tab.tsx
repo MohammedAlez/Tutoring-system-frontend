@@ -20,6 +20,7 @@ export function GroupSessionsTab({ groupId }: GroupSessionsTabProps) {
 
   const sessions = response?.data || [];
 
+  console.log("Fetched sessions for group", groupId, sessions);
   if (isLoading) {
     return <Skeleton className="h-[300px] w-full rounded-xl" />;
   }

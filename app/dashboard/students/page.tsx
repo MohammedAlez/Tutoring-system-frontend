@@ -36,7 +36,7 @@ export default function StudentsPage() {
   const pagination = data?.pagination;
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-2">
       {/* Top Action Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

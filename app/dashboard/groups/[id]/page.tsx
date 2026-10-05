@@ -31,7 +31,7 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-2 space-y-6">
       <Suspense fallback={<GroupDetailSkeleton />}>
         <GroupDetailClient groupId={groupId} initialGroup={initialGroup} />
       </Suspense>

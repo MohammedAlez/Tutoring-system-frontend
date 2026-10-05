@@ -20,7 +20,7 @@ export default function DashboardPage() {
   console.log("scheduleData:", scheduleData);
   console.log("paymentsResponse:", paymentsResponse);
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-2">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Tutor Dashboard</h1>
