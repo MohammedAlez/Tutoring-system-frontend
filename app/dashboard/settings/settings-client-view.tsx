@@ -11,7 +11,7 @@ export function SettingsClientView({ profile }: { profile: UserProfile }) {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 w-full">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Account Settings</h1>
         <p className="text-sm text-muted-foreground">
