@@ -329,14 +329,60 @@ function SidebarInput({
   )
 }
 
-function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
+// function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
+//   return (
+//     <div
+//       data-slot="sidebar-header"
+//       data-sidebar="header"
+//       className={cn("flex flex-col gap-2 p-2", className)}
+//       {...props}
+//     />
+//   )
+// }
+
+function LeernoWordmark() {
+  return (
+    <span
+      className="
+
+        font-[var(--font-comfortaa)]
+        text-[30px]
+        mt-1
+        font-bold
+        tracking-[-0.035em]
+        text-primary
+        group-data-[collapsible=icon]:hidden
+      "
+    >
+      Leerno
+    </span>
+  )
+}
+
+function SidebarHeader({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sidebar-header"
       data-sidebar="header"
-      className={cn("flex flex-col gap-2 p-2", className)}
+      className={cn("p-3", className)}
       {...props}
-    />
+    >
+      <div className="flex h-10 items-center gap-3">
+        {/* Brand mark */}
+        <img
+          src="/logo.png"
+          alt="Leerno"
+          className="size-9 shrink-0 object-contain"
+        />
+
+        {/* Brand name */}
+         {/* Wordmark */}
+        <LeernoWordmark />
+      </div>
+    </div>
   )
 }
 

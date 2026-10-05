@@ -108,6 +108,7 @@ export function PaymentHistoryTab({ payments = [] }: PaymentHistoryTabProps) {
           }}
           open={!!selectedPayment}
           onOpenChange={(open) => !open && setSelectedPayment(null)}
+          invalidateQueryKey={['student-details']}
         />
       )}
     </>

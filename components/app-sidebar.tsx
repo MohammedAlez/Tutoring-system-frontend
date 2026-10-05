@@ -31,6 +31,7 @@ import {
   CreditCardIcon,
 } from "lucide-react"
 import { GalleryVerticalEndIcon } from "lucide-react"
+import Image from "next/image"
 
 // This is sample data.
 const data = {
@@ -38,8 +39,8 @@ const data = {
     {
       name: "Acme Inc.",
       logo: (
-        <GalleryVerticalEndIcon size={30}
-        />
+        // <GalleryVerticalEndIcon size={30} />
+        <Image src="/logo.png" alt="Logo" width={30} height={30} className="rounded-full" />
       ),
       plan: "School",
     },

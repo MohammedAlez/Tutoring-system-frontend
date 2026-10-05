@@ -145,7 +145,7 @@ export function CreateStudentModal({ open, onOpenChange }: CreateStudentModalPro
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="level">Academic Level</Label>
               <Select
@@ -181,7 +181,7 @@ export function CreateStudentModal({ open, onOpenChange }: CreateStudentModalPro
                 </SelectContent>
               </Select>
             </div>
-          </div>
+          </div> */}
 
           <div className="space-y-2">
             <Label htmlFor="notes">Notes / Observations</Label>

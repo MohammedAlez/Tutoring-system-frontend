@@ -73,8 +73,9 @@ export interface StudentDetail {
 // Hooks using /api/proxy and query keys
 export function useStudentDetail(id: string) {
   return useApiQuery<StudentDetail>(
-    studentKeys.detail(id),
-    `/students/${id}`
+    // studentKeys.detail(id),
+    ['student-details'] as readonly[string], 
+    `/students/${id}`,
   );
 }
 

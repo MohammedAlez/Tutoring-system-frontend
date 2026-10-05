@@ -51,7 +51,7 @@ export function TableFilterBar({
         </div>
 
         {/* Level Filter */}
-        <Select value={level} onValueChange={onLevelChange}>
+        {/* <Select value={level} onValueChange={onLevelChange}>
           <SelectTrigger className="w-full sm:w-36 h-9">
             <SelectValue placeholder="All Levels" />
           </SelectTrigger>
@@ -62,10 +62,10 @@ export function TableFilterBar({
             <SelectItem value="3AS">3AS</SelectItem>
             <SelectItem value="4AM">4AM</SelectItem>
           </SelectContent>
-        </Select>
+        </Select> */}
 
         {/* Subject Filter */}
-        <Select value={subject} onValueChange={onSubjectChange}>
+        {/* <Select value={subject} onValueChange={onSubjectChange}>
           <SelectTrigger className="w-full sm:w-40 h-9">
             <SelectValue placeholder="All Subjects" />
           </SelectTrigger>
@@ -76,7 +76,7 @@ export function TableFilterBar({
             <SelectItem value="Computer Science">Computer Science</SelectItem>
             <SelectItem value="Sciences">Sciences</SelectItem>
           </SelectContent>
-        </Select>
+        </Select> */}
 
         {/* Status Filter */}
         <Select value={status} onValueChange={onStatusChange}>

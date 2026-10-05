@@ -156,13 +156,13 @@ export function StudentTable({ students, isLoading }: StudentTableProps) {
                         <DropdownMenuItem onClick={() => router.push(`/dashboard/students/${student.id}`)}>
                           <Eye className="mr-2 h-4 w-4" /> View Profile
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => router.push(`/dashboard/students/${student.id}/edit`)}>
+                        {/* <DropdownMenuItem onClick={() => router.push(`/dashboard/students/${student.id}/edit`)}>
                           <Edit className="mr-2 h-4 w-4" /> Edit Details
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="text-destructive">
                           <Trash2 className="mr-2 h-4 w-4" /> Delete Profile
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

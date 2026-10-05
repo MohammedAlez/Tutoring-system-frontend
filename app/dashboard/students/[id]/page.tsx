@@ -49,7 +49,7 @@ export default function StudentDetailPage({ params }: StudentDetailPageProps) {
   }
 
   return (
-    <div className="p-6 space-y-6 w-full mx-auto">
+    <div className="p-2 space-y-6 w-full mx-auto">
       {/* Navigation Breadcrumb */}
       <div>
         <Link
