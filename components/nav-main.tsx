@@ -23,7 +23,6 @@ export function NavMain({
   }[]
 }) {
   const pathname = usePathname()
-
   const currentUser = useCurrentUser() 
   
   console.log(currentUser) // Log the current user object to the console
@@ -34,8 +33,12 @@ export function NavMain({
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
-          const isActive = pathname === item.url
 
+          // const isActive = pathname === item.url
+          const isActive =
+            pathname === item.url || pathname.startsWith(`${item.url}/`)
+
+            
           return (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
