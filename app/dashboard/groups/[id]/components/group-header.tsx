@@ -54,7 +54,8 @@ export function GroupHeader({ group }: GroupHeaderProps) {
               <p className="text-xs text-muted-foreground font-medium">Enrolled Students</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-primary">{group._count?.sessions ?? 0}</p>
+              {/* <p className="text-2xl font-bold text-primary">{group._count?.sessions ?? 0}</p> */}
+              <p className="text-2xl font-bold text-primary">{group.schedules.length ?? 0}</p>
               <p className="text-xs text-muted-foreground font-medium">Total Sessions</p>
             </div>
           </div>

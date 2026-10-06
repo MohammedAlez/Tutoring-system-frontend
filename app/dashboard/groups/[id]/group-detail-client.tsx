@@ -82,7 +82,7 @@ export function GroupDetailClient({ groupId, initialGroup }: GroupDetailClientPr
             </span>
           </TabsTrigger>
 
-          <TabsTrigger
+          {/* <TabsTrigger
             value="sessions"
             className="
               group gap-2.5 rounded-xl px-6 py-5 text-sm font-medium
@@ -106,7 +106,7 @@ export function GroupDetailClient({ groupId, initialGroup }: GroupDetailClientPr
             >
               {group._count?.sessions ?? 0}
             </span>
-          </TabsTrigger>
+          </TabsTrigger> */}
 
           <TabsTrigger
             value="attendance"
@@ -140,9 +140,9 @@ export function GroupDetailClient({ groupId, initialGroup }: GroupDetailClientPr
           />
         </TabsContent>
 
-        <TabsContent value="sessions" className="space-y-4">
+        {/* <TabsContent value="sessions" className="space-y-4">
           <GroupSessionsTab groupId={groupId} />
-        </TabsContent>
+        </TabsContent> */}
 
         <TabsContent value="attendance" className="space-y-4">
           <GroupAttendanceStatsTab groupId={groupId} />

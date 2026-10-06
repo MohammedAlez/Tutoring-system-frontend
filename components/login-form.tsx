@@ -27,10 +27,35 @@ export function LoginForm({
         <CardContent className="grid p-0 md:grid-cols-2">
           <form action={action} className="p-6 md:p-8">
             <FieldGroup>
-              <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-2xl font-bold">Welcome back</h1>
-                <p className="text-balance text-muted-foreground">
-                  Login to your School account
+              <div className="flex flex-col items-start gap-2 text-center">
+                <div className="flex pb-7">
+                  <img
+                    src="/logo.png"
+                    alt="Leerno"
+                    className="size-9 shrink-0 object-contain"
+                  />
+
+                  <span
+                    className="
+
+                      font-[var(--font-comfortaa)]
+                      text-[30px]
+                      font-bold
+                      tracking-[-0.035em]
+                      text-primary
+                      group-data-[collapsible=icon]:hidden
+                    "
+                  >
+                    Leerno
+                  </span>
+                </div>
+                <h1 className="text-2xl font-bold">Welcome <span className='text-primary'>back</span></h1>
+                
+                <p className="text-baladnce text-start text-muted-foreground">
+                  Continue your learning journey with Leerno. 
+                </p>
+                <p className="text-baladnce text-start text-muted-foreground">
+                  Log in to access sessions, students, and everything you need.
                 </p>
               </div>
 
@@ -92,11 +117,11 @@ export function LoginForm({
                 </Button>
               </Field>
 
-              <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
+              {/* <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
-              </FieldSeparator>
+              </FieldSeparator> */}
 
-              <Field className="grid grid-cols-3 gap-4">
+              {/* <Field className="grid grid-cols-3 gap-4">
                 <Button variant="outline" type="button">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
@@ -124,7 +149,7 @@ export function LoginForm({
                   </svg>
                   <span className="sr-only">Login with Meta</span>
                 </Button>
-              </Field>
+              </Field> */}
 
               <FieldDescription className="text-center">
                 Don&apos;t have an account? <a href="#">Sign up</a>
