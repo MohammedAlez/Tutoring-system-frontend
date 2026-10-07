@@ -20,33 +20,63 @@ export default function DashboardPage() {
   console.log("scheduleData:", scheduleData);
   console.log("paymentsResponse:", paymentsResponse);
   return (
-    <div className="space-y-6 p-2">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Tutor Dashboard</h1>
-          <p className="text-sm text-muted-foreground">
-            Overview of active students, today's schedule, and pending payments.
-          </p>
-        </div>
-        <QuickActionButtonGroup />
-      </div>
+    // <div className="space-y-6 p-2 min-h-full">
+    //   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    //     <div>
+    //       <h1 className="text-2xl font-bold tracking-tight">Tutor Dashboard</h1>
+    //       <p className="text-sm text-muted-foreground">
+    //         Overview of active students, today's schedule, and pending payments.
+    //       </p>
+    //     </div>
+    //     <QuickActionButtonGroup />
+    //   </div>
 
-      <MetricCardGrid 
-        stats={stats} 
-        isLoading={isLoadingStats} 
-      />
+    //   <MetricCardGrid 
+    //     stats={stats} 
+    //     isLoading={isLoadingStats} 
+    //   />
 
-      <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
-        <TodayScheduleWidget 
-          schedules={scheduleData?.data} 
-          isLoading={isLoadingSchedule} 
-        />
-        <UnpaidStudentsWidget
-          payments={paymentsResponse?.data.payments}
-          totalOutstanding={paymentsResponse?.data.stats.pendingAmount}
-          isLoading={isLoadingPayments}
-        />
-      </div>
+    //   <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 items-stretch">
+    //     <TodayScheduleWidget 
+    //       schedules={scheduleData?.data} 
+    //       isLoading={isLoadingSchedule} 
+    //     />
+    //     <UnpaidStudentsWidget
+    //       payments={paymentsResponse?.data.payments}
+    //       totalOutstanding={paymentsResponse?.data.stats.pendingAmount}
+    //       isLoading={isLoadingPayments}
+    //     />
+    //   </div>
+    // </div>
+    <div className="flex min-h-0 flex-1 flex-col gap-6 p-2">
+  <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+    <div>
+      <h1 className="text-2xl font-bold tracking-tight">Tutor Dashboard</h1>
+      <p className="text-sm text-muted-foreground">
+        Overview of active students, today's schedule, and pending payments.
+      </p>
     </div>
+
+    <QuickActionButtonGroup />
+  </div>
+
+  <MetricCardGrid
+    stats={stats}
+    isLoading={isLoadingStats}
+  />
+
+  <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-6 lg:grid-cols-7">
+    <TodayScheduleWidget
+      schedules={scheduleData?.data}
+      isLoading={isLoadingSchedule}
+    />
+
+    <UnpaidStudentsWidget
+      payments={paymentsResponse?.data.payments}
+      totalOutstanding={paymentsResponse?.data.stats.pendingAmount}
+      isLoading={isLoadingPayments}
+    />
+  </div>
+</div>
   );
 }
