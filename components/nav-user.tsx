@@ -31,6 +31,7 @@ import {
   LogOutIcon,
 } from "lucide-react"
 import { useCurrentUser } from "@/my-components/user-provider"
+import { useRouter } from "next/navigation"
 
 export function NavUser({
   user,
@@ -43,6 +44,7 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
 
   const handleLogout = () => {
     startTransition(async () => {
@@ -100,7 +102,7 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/dashboard/settings")}>
                 <BadgeCheckIcon />
                 Account
               </DropdownMenuItem>
