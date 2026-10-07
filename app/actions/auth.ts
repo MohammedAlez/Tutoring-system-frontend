@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 import { LoginFormSchema, FormState } from '@/lib/definitions'
 import { createSession, destroySession } from '@/lib/session'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8500/api'
+const API_BASE_URL = process.env.API_URL || 'http://localhost:8500/api'
 
 export async function loginAction(state: FormState, formData: FormData): Promise<FormState> {
   const validatedFields = LoginFormSchema.safeParse({

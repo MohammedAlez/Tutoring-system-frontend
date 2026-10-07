@@ -1,7 +1,7 @@
 // app/api/proxy/[...path]/route.ts
 //
 // Every client-side fetch should hit /api/proxy/<your-api-path> instead of
-// calling NEXT_PUBLIC_API_URL directly. This keeps the request same-origin
+// calling API_URL directly. This keeps the request same-origin
 // (cookie sent automatically) and reuses fetchWithAuth's refresh logic, so
 // the browser never needs to know or handle the access token.
 //

@@ -2,7 +2,7 @@
 // import axios from 'axios'
 
 // export const api = axios.create({
-//   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8500/api',
+//   baseURL: process.env.API_URL || 'http://localhost:8500/api',
 //   withCredentials: true,
 // })
 
@@ -18,7 +18,7 @@
 //       try {
 //         // Call backend refresh endpoint
 //         await axios.post(
-//           `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
+//           `${process.env.API_URL}/auth/refresh`,
 //           {},
 //           { withCredentials: true }
 //         )

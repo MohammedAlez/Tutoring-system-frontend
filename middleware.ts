@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { PROTECTED_ROUTES, AUTH_ROUTES } from '@/lib/definitions'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8500/api'
+const API_BASE_URL = process.env.API_URL || 'http://localhost:8500/api'
 const REFRESH_BUFFER_MS = 30_000 // refresh 30s before actual expiry, not exactly at expiry
 
 // Decodes the JWT payload WITHOUT verifying the signature — we only need

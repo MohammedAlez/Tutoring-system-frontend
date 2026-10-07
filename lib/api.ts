@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createSession, destroySession } from './session'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8500/api'
+const API_BASE_URL = process.env.API_URL || 'http://localhost:8500/api'
 
 export async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
   const cookieStore = await cookies()

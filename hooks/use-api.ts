@@ -1,7 +1,7 @@
 // hooks/use-api.ts
 // Thin wrapper so every resource hook doesn't repeat the same fetch/JSON boilerplate.
 // All requests go through /api/proxy/* (see app/api/proxy/[...path]/route.ts),
-// never directly to NEXT_PUBLIC_API_URL from the browser.
+// never directly to API_URL from the browser.
 import {
   useQuery,
   useMutation,
