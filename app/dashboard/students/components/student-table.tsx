@@ -39,7 +39,7 @@ export function StudentTable({ students, isLoading }: StudentTableProps) {
           <TableRow>
             <TableHead>Student Name</TableHead>
             <TableHead>Contacts</TableHead>
-            <TableHead>Level / Subject</TableHead>
+            {/* <TableHead>Level / Subject</TableHead> */}
             <TableHead>Enrolled Groups</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Actions</TableHead>
@@ -102,14 +102,14 @@ export function StudentTable({ students, isLoading }: StudentTableProps) {
                     </div>
                   </TableCell>
 
-                  <TableCell>
+                  {/* <TableCell>
                     <div className="text-xs">
                       <span className="font-medium">{student.level || "N/A"}</span>
                       {student.subject && (
                         <span className="text-muted-foreground"> • {student.subject}</span>
                       )}
                     </div>
-                  </TableCell>
+                  </TableCell> */}
 
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
