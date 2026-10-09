@@ -15,15 +15,17 @@ import {
 } from "@/components/ui/table";
 import { StudentPaymentRecord } from "@/lib/queries/student-detail";
 import { UpdatePaymentDialog } from "./UpdatePaymentDialog";
+import { studentKeys } from "@/lib/queries/students";
 
 interface PaymentHistoryTabProps {
   studentId: string;
   payments: StudentPaymentRecord[];
 }
 
-export function PaymentHistoryTab({ payments = [] }: PaymentHistoryTabProps) {
+export function PaymentHistoryTab({ payments = [], studentId }: PaymentHistoryTabProps) {
   const [selectedPayment, setSelectedPayment] = useState<StudentPaymentRecord | null>(null);
 
+  
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "PAID":
@@ -108,7 +110,7 @@ export function PaymentHistoryTab({ payments = [] }: PaymentHistoryTabProps) {
           }}
           open={!!selectedPayment}
           onOpenChange={(open) => !open && setSelectedPayment(null)}
-          invalidateQueryKey={['student-details']}
+          invalidateQueryKey={studentKeys.detail(studentId)}
         />
       )}
     </>

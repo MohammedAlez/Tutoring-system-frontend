@@ -15,6 +15,8 @@ import {
 
 import { groupKeys } from "@/lib/queries/group";
 import { useApiMutation } from "@/hooks/use-api";
+import { studentKeys } from "@/lib/queries/students";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface GroupAssignmentCardProps {
   studentId: string;
@@ -27,10 +29,14 @@ export function GroupAssignmentCard({
 }: GroupAssignmentCardProps) {
   const { group, joinedAt } = assignment;
   
+  const queryClient = useQueryClient();
+
+
   const unenrollMutation = useApiMutation<void>(
     `/groups/${group.id}/students/${studentId}`,
     "DELETE",
-    groupKeys.detail(group.id)
+    // groupKeys.detail(group.id)
+    studentKeys.detail(studentId)
   );
 
   const handleUnenroll = () => {
@@ -42,7 +48,22 @@ export function GroupAssignmentCard({
       return;
     }
 
-    unenrollMutation.mutate(undefined);
+    // unenrollMutation.mutate(undefined);
+    unenrollMutation.mutate(undefined, {
+      onSuccess: async () => {
+      await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: groupKeys.detail(group.id),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: studentKeys.all,
+          }),
+          // queryClient.invalidateQueries({
+          //   queryKey: groupKeys.all,
+          // }),
+        ]);
+      },
+    });
   };
 
   return (

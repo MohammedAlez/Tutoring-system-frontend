@@ -27,7 +27,10 @@ export function GroupsClient({ initialData }: GroupsClientProps) {
   const { data: response, isLoading } = useApiQuery<{ data: GroupRecord[] }>(
     groupKeys.list(selectedType, search),
     queryPath,
-    { initialData: selectedType === "ALL" && !search ? { data: initialData } : undefined }
+    { 
+      initialData: selectedType === "ALL" && !search ? { data: initialData } : undefined,
+      staleTime: 0
+    }
   );
 
   const groups = response?.data || [];

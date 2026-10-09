@@ -23,7 +23,7 @@ export default function StudentsPage() {
     subject,
     page,
     limit: 10,
-  });
+  },);
 
   const handleResetFilters = () => {
     setSearch("");
