@@ -67,7 +67,7 @@ export default function StudentDetailPage({ params }: StudentDetailPageProps) {
       <StudentHeaderCard student={student} />
 
       {/* Academic / Behavioral Notes */}
-      <NotesCard studentId={student.id} initialNotes={student.notes} />
+      {/* <NotesCard studentId={student.id} initialNotes={student.notes} /> */}
 
       {/* Main Relational Tabs */}
       <Tabs defaultValue="groups" className="w-full">

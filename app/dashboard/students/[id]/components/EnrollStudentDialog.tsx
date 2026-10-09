@@ -1,8 +1,11 @@
+
 "use client";
 
 import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+
 import {
   Dialog,
   DialogContent,
@@ -10,6 +13,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+
 import {
   Select,
   SelectContent,
@@ -17,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { useApiQuery, useApiMutation } from "@/hooks/use-api";
 import { studentKeys } from "@/lib/queries/students";
 
@@ -41,24 +46,35 @@ export function EnrollStudentDialog({
   open,
   onOpenChange,
 }: EnrollStudentDialogProps) {
-  const [selectedGroupId, setSelectedGroupId] = useState<string|null>(null);
+  const [selectedGroupId, setSelectedGroupId] = useState("");
 
-  // 1. Client-side fetching using useApiQuery
-  const { data: groupsResponse, isLoading: isFetchingGroups, isError } = useApiQuery<{ data: GroupOption[] }>(
+  const {
+    data: groupsResponse,
+    isLoading: isFetchingGroups,
+    isError,
+  } = useApiQuery<{ data: GroupOption[] }>(
     ["groups", "active"],
-    "/groups?status=ACTIVE",
+    "/groups?status=ACTIVE"
   );
 
-  // Filter out groups the student is already enrolled in
+  // Exclude groups the student is already enrolled in.
   const availableGroups = (groupsResponse?.data || []).filter(
-    (g) => !enrolledGroupIds.includes(g.id)
+    (group) => !enrolledGroupIds.includes(group.id)
   );
 
-  // 2. Client-side mutation using useApiMutation
-  const enrollMutation = useApiMutation<void, { studentId: string }>(
-    selectedGroupId ? `/groups/${selectedGroupId}/students` : "",
+  const selectedGroup = availableGroups.find(
+    (group) => group.id === selectedGroupId
+  );
+
+  const enrollMutation = useApiMutation<
+    void,
+    { studentId: string }
+  >(
+    selectedGroupId
+      ? `/groups/${selectedGroupId}/students`
+      : "",
     "POST",
-    studentKeys.detail(studentId) // Auto-invalidates and refetches student detail cache on success
+    studentKeys.detail(studentId)
   );
 
   const handleEnroll = () => {
@@ -75,8 +91,16 @@ export function EnrollStudentDialog({
     );
   };
 
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      setSelectedGroupId("");
+    }
+
+    onOpenChange(nextOpen);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
           <DialogTitle>Enroll in Group</DialogTitle>
@@ -84,57 +108,95 @@ export function EnrollStudentDialog({
 
         <div className="space-y-4 py-2">
           {isError && (
-            <p className="text-xs text-destructive">Failed to load available groups.</p>
+            <p className="text-sm text-destructive" role="alert">
+              Failed to load available groups.
+            </p>
           )}
+
           {enrollMutation.isError && (
-            <p className="text-xs text-destructive">
-              {enrollMutation.error?.message || "Failed to enroll student."}
+            <p className="text-sm text-destructive" role="alert">
+              {enrollMutation.error?.message ||
+                "Failed to enroll student."}
             </p>
           )}
 
           <div className="space-y-1.5">
-            <Label>Select Group</Label>
+            <Label htmlFor="group">Select Group</Label>
+
             <Select
               value={selectedGroupId}
-              onValueChange={setSelectedGroupId}
-              disabled={isFetchingGroups}
+              onValueChange={(val) => val && setSelectedGroupId(val)}
+              disabled={isFetchingGroups || availableGroups.length === 0}
             >
-              <SelectTrigger>
+              <SelectTrigger id="group">
                 <SelectValue
-                  placeholder={isFetchingGroups ? "Loading groups..." : "Choose a group"}
-                />
+                  placeholder={
+                    isFetchingGroups
+                      ? "Loading groups..."
+                      : "Choose a group"
+                  }
+                >
+                  {selectedGroup && (
+                    <span>{selectedGroup.name}</span>
+                  )}
+                </SelectValue>
               </SelectTrigger>
+
               <SelectContent>
                 {availableGroups.length === 0 ? (
-                  <div className="p-2 text-xs text-muted-foreground text-center">
-                    No available groups
+                  <div className="p-2 text-center text-sm text-muted-foreground">
+                    {isFetchingGroups
+                      ? "Loading groups..."
+                      : "No available groups"}
                   </div>
                 ) : (
                   availableGroups.map((group) => (
                     <SelectItem key={group.id} value={group.id}>
-                      {group.name} ({group.level} • {group.subject})
+                      <div className="flex flex-col gap-0.5">
+                        <span className="font-medium">
+                          {group.name}
+                        </span>
+
+                        <span className="text-xs text-muted-foreground">
+                          {group.level} · {group.subject}
+                        </span>
+                      </div>
                     </SelectItem>
                   ))
                 )}
               </SelectContent>
             </Select>
           </div>
+
+          {selectedGroup && (
+            <p className="text-sm text-muted-foreground">
+              Selected group:{" "}
+              <span className="font-medium text-foreground">
+                {selectedGroup.name}
+              </span>
+            </p>
+          )}
         </div>
 
         <DialogFooter>
           <Button
             type="button"
             variant="outline"
-            onClick={() => onOpenChange(false)}
+            onClick={() => handleOpenChange(false)}
             disabled={enrollMutation.isPending}
           >
             Cancel
           </Button>
+
           <Button
             onClick={handleEnroll}
-            disabled={!selectedGroupId || enrollMutation.isPending}
+            disabled={
+              !selectedGroupId || enrollMutation.isPending
+            }
           >
-            {enrollMutation.isPending ? "Enrolling..." : "Enroll Student"}
+            {enrollMutation.isPending
+              ? "Enrolling..."
+              : "Enroll Student"}
           </Button>
         </DialogFooter>
       </DialogContent>

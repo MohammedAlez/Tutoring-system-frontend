@@ -93,7 +93,7 @@ export function useStudents(params: GetStudentsParams) {
   return useApiQuery<GetStudentsResponse>(
     studentKeys.list(params),
     path,
-    {staleTime: 0} // Cache for 5 minutes
+    {staleTime: 0}
   );
 }
 
