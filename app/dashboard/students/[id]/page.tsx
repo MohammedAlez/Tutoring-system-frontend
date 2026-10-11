@@ -7,7 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { StudentHeaderCard } from "./components/student-header-card";
-import { NotesCard } from "./components/notes-card";
+// import { NotesCard } from "./components/notes-card";
 import { GroupAssignmentsTab } from "./components/group-assignments-tab";
 import { AttendanceHistoryTab } from "./components/attendance-history-tab";
 import { PaymentHistoryTab } from "./components/payment-history-tab";
