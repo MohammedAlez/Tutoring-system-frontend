@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 
 import {
-  StudentGroupDetail,
+  GroupEnrollment,
 } from "@/lib/queries/student-detail";
 
 import { EnrollStudentDialog } from "./EnrollStudentDialog";
@@ -21,7 +21,7 @@ import { GroupAssignmentCard } from "./group-assignment-card";
 
 interface GroupAssignmentsTabProps {
   studentId: string;
-  groups: StudentGroupDetail[];
+  groups: GroupEnrollment[];
 }
 
 export function GroupAssignmentsTab({

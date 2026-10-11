@@ -5,7 +5,6 @@ import { PaymentsClient } from './payments-client';
 export default async function PaymentsPage() {
   await requireUser();
 
-  // Format current YYYY-MM string for default filter
   const now = new Date();
   const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
@@ -13,10 +12,10 @@ export default async function PaymentsPage() {
     <div className="container mx-auto p-2 max-w-7xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-foreground">
-          Payments & Billing Management
+          Payments & Invoicing Management
         </h1>
         <p className="text-sm text-muted-foreground">
-          Track tuition collections, inspect overdue balances, and issue student payment receipts.
+          Monitor recurring invoices, track outstanding balances, and record tuition payment transactions.
         </p>
       </div>
 

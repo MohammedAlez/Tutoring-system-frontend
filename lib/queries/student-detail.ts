@@ -6,26 +6,31 @@ export type AttendanceStatus = "PRESENT" | "ABSENT" | "LATE" | "EXCUSED";
 export type PaymentStatus = "PENDING" | "PAID" | "OVERDUE" | "CANCELLED";
 export type PaymentMethod = "CASH" | "BANK_TRANSFER" | "CCP" | "OTHER";
 
-export interface StudentGroupDetail {
+export interface GroupEnrollment {
   id: string;
   groupId: string;
+  studentId: string;
   joinedAt: string;
+  leftAt: string | null;
+  billingFee: string;
+  billingIntervalMonths: number;
+  nextBillingDate: string;
+  billingEnabled: boolean;
   group: {
     id: string;
     name: string;
-    subject: string | null;
-    level: string | null;
-    room: string | null;
-    isOnline: boolean;
+    type: string;
+    subject: string;
+    level: string;
+    room?: string;
+    isOnline?: boolean;
     status: string;
   };
 }
 
-export interface StudentAttendanceRecord {
+export interface AttendanceRecord {
   id: string;
-  sessionId: string;
-  status: AttendanceStatus;
-  note: string | null;
+  status: string;
   createdAt: string;
   session: {
     id: string;
@@ -38,36 +43,45 @@ export interface StudentAttendanceRecord {
   };
 }
 
-export interface StudentPaymentRecord {
+export interface PaymentTransaction {
   id: string;
-  amount: string;
-  status: PaymentStatus;
-  dueDate: string | null;
-  paidAt: string | null;
-  paymentMethod: PaymentMethod | null;
-  periodStart: string | null;
-  periodEnd: string | null;
-  note: string | null;
+  amount: number | string;
+  paidAt: string;
+  paymentMethod: string;
+  note?: string;
+}
+
+export interface Invoice {
+  id: string;
+  amount: number | string;
+  status: "PENDING" | "PARTIALLY_PAID" | "PAID" | "OVERDUE" | "CANCELLED";
+  periodStart: string;
+  periodEnd: string;
+  dueDate: string;
+  description?: string;
+  paidAmount: number | string;
+  outstandingBalance: number | string;
+  payments: PaymentTransaction[];
+  enrollment: {
+    id: string;
+    group: {
+      id: string;
+      name: string;
+      type: string;
+    };
+  };
 }
 
 export interface StudentDetail {
   id: string;
   firstName: string;
   lastName: string;
-  phone: string | null;
-  parentName: string | null;
-  parentPhone: string | null;
-  level: string | null;
-  school: string | null;
-  subject: string | null;
-  enrollmentDate: string;
-  status: "ACTIVE" | "INACTIVE";
-  notes: string | null;
-  createdAt: string;
-  updatedAt: string;
-  groupStudents: StudentGroupDetail[];
-  attendance: StudentAttendanceRecord[];
-  payments: StudentPaymentRecord[];
+  phone: string;
+  parentPhone?: string;
+  status: string;
+  groupStudents: GroupEnrollment[];
+  attendance: AttendanceRecord[];
+  invoices: Invoice[];
 }
 
 // Hooks using /api/proxy and query keys
@@ -103,10 +117,14 @@ export function useUnenrollStudent(studentId: string, groupId: string) {
   );
 }
 
-export function useMarkPaymentPaid(studentId: string, paymentId: string) {
-  return useApiMutation<StudentPaymentRecord, { status: "PAID"; paymentMethod: PaymentMethod; paidAt: string }>(
-    `/payments/${paymentId}`,
-    "PATCH",
-    studentKeys.detail(studentId)
-  );
-}
+// export function useMarkPaymentPaid(studentId: string, paymentId: string) {
+//   return useApiMutation<StudentPaymentRecord, { status: "PAID"; paymentMethod: PaymentMethod; paidAt: string }>(
+//     `/payments/${paymentId}`,
+//     "PATCH",
+//     studentKeys.detail(studentId)
+//   );
+// }
+
+
+
+

@@ -21,6 +21,7 @@ export default function StudentDetailPage({ params }: StudentDetailPageProps) {
   const resolvedParams = use(params);
   const { data: student, isLoading, isError } = useStudentDetail(resolvedParams.id);
 
+  console.log("Student detail data:", student);
   if (isLoading) {
     return (
       <div className="p-6 space-y-6 animate-pulse">
@@ -92,7 +93,7 @@ export default function StudentDetailPage({ params }: StudentDetailPageProps) {
           <TabsContent value="payments">
             <PaymentHistoryTab
               studentId={student.id}
-              payments={student.payments || []}
+              invoices={student.invoices || []}
             />
           </TabsContent>
         </div>

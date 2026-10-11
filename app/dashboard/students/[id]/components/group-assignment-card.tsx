@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 import {
-  StudentGroupDetail,
+  GroupEnrollment,
 } from "@/lib/queries/student-detail";
 
 import { groupKeys } from "@/lib/queries/group";
@@ -20,7 +20,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 interface GroupAssignmentCardProps {
   studentId: string;
-  assignment: StudentGroupDetail;
+  assignment: GroupEnrollment;
 }
 
 export function GroupAssignmentCard({

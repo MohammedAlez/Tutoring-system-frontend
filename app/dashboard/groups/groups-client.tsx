@@ -35,6 +35,7 @@ export function GroupsClient({ initialData }: GroupsClientProps) {
 
   const groups = response?.data || [];
 
+  console.log("groups: ", initialData);
   return (
     <div className="space-y-6">
       {/* Header */}

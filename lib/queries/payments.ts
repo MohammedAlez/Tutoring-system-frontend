@@ -1,87 +1,63 @@
-// lib/queries/payments.ts
+export type InvoiceStatus = 'PENDING' | 'PARTIALLY_PAID' | 'PAID' | 'OVERDUE' | 'CANCELLED';
+export type PaymentMethod = 'CASH' | 'BANK_TRANSFER' | 'CCP' | 'OTHER';
 
-export type PaymentStatus = 'PAID' | 'PENDING' | 'OVERDUE';
-export type PaymentMethod = 'CASH' | 'CCP' | 'BARIDIMOB' | 'BANK_TRANSFER' | 'OTHER';
-
-export interface PaymentStudent {
+export interface InvoiceRecord {
   id: string;
-  firstName: string;
-  lastName: string;
-  phone: string | null;
-}
-
-export interface PaymentGroup {
-  id: string;
-  name: string;
-  subject: string;
-}
-
-export interface PaymentRecord {
-  id: string;
+  tutorId: string;
   studentId: string;
-  amount: number;
-  status: PaymentStatus;
-  dueDate: string;
-  paidAt: string | null;
+  enrollmentId: string;
+  amount: string;
+  status: InvoiceStatus;
   periodStart: string;
   periodEnd: string;
-  paymentMethod: PaymentMethod | null;
-  note: string | null;
-  student: PaymentStudent;
-  group?: PaymentGroup;
-}
-
-export interface PaymentStats {
-  totalCollected: number;
-  pendingAmount: number;
-  overdueAmount: number;
-  totalInvoices: number;
-}
-
-export interface PaymentsResponse {
-  success: boolean;
-  data: {
-    stats: PaymentStats;
-    payments: PaymentRecord[];
+  dueDate: string;
+  description: string | null;
+  paidAmount?: string;
+  outstandingBalance?: string;
+  student: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    phone?: string | null;
   };
+  enrollment: {
+    id: string;
+    group: {
+      id: string;
+      name: string;
+      subject?: string;
+      type?: string;
+    };
+  };
+  payments: Array<{
+    id: string;
+    amount: string;
+    paidAt: string;
+    paymentMethod: PaymentMethod;
+    note?: string | null;
+  }>;
 }
 
-export interface PaymentsQueryParams {
-  status?: PaymentStatus | 'ALL';
-  month?: string; // YYYY-MM
-  search?: string;
+export interface PaymentSummary {
+  collected: string;
+  outstanding: string;
+  overdue: string;
+  dueSoon: string;
+  dueSoonDays: number;
+  asOf: string;
 }
 
-export interface CreatePaymentPayload {
-  studentId: string;
-  groupId?: string;
-  amount: number;
-  status: PaymentStatus;
-  dueDate: string;
-  periodStart: string;
-  periodEnd: string;
-  paymentMethod?: PaymentMethod;
-  note?: string;
+export interface UpcomingInvoice extends InvoiceRecord {
+  attentionStatus: 'OVERDUE' | 'DUE_SOON';
+  daysUntilDue: number | null;
+  daysOverdue: number | null;
 }
 
-export interface UpdatePaymentPayload {
-  status?: PaymentStatus;
-  paidAt?: string;
-  paymentMethod?: PaymentMethod;
-  note?: string;
-}
-
-export const paymentsQueryKey = (params: PaymentsQueryParams) => [
-  'payments',
-  params.status || 'ALL',
-  params.month || 'current',
-  params.search || '',
-];
-
-export const buildPaymentsApiPath = (params: PaymentsQueryParams) => {
-  const query = new URLSearchParams();
-  if (params.status && params.status !== 'ALL') query.append('status', params.status);
-  if (params.month) query.append('month', params.month);
-  if (params.search) query.append('search', params.search);
-  return `/payments?${query.toString()}`;
+export const paymentKeys = {
+  all: ['payments'] as const,
+  summary: () => [...paymentKeys.all, 'summary'] as const,
+  upcoming: () => [...paymentKeys.all, 'upcoming'] as const,
+  invoices: (filters?: Record<string, any>) => ['invoices', filters] as const,
+  invoiceDetail: (id: string) => ['invoices', id] as const,
+  transactions: (filters?: Record<string, any>) => [...paymentKeys.all, 'transactions', filters] as const,
 };

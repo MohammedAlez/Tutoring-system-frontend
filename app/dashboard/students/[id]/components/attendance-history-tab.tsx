@@ -11,10 +11,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { StudentAttendanceRecord, AttendanceStatus } from "@/lib/queries/student-detail";
+import { AttendanceRecord, AttendanceStatus } from "@/lib/queries/student-detail";
 
 interface AttendanceHistoryTabProps {
-  records: StudentAttendanceRecord[];
+  records: AttendanceRecord[];
 }
 
 export function AttendanceHistoryTab({ records }: AttendanceHistoryTabProps) {
@@ -106,10 +106,10 @@ export function AttendanceHistoryTab({ records }: AttendanceHistoryTabProps) {
                     </TableCell>
                     <TableCell>{rec.session.group.name}</TableCell>
                     <TableCell>
-                      <StatusBadge status={rec.status} />
+                      {/* <StatusBadge status={rec.status} /> */}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {rec.note || "—"}
+                      {/* {rec.note || "—"} */}
                     </TableCell>
                   </TableRow>
                 ))

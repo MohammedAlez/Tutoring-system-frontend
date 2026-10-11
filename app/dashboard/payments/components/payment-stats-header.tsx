@@ -1,17 +1,19 @@
-// app/dashboard/payments/_components/payment-stats-header.tsx
 'use client';
 
-import { PaymentStats } from '@/lib/queries/payments';
+import { useApiQuery } from '@/hooks/use-api';
+import { paymentKeys, PaymentSummary } from '@/lib/queries/payments';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DollarSign, Clock, AlertCircle, FileText } from 'lucide-react';
+import { DollarSign, Clock, AlertCircle, CheckCircle } from 'lucide-react';
 
-interface PaymentStatsHeaderProps {
-  stats?: PaymentStats;
-  isLoading: boolean;
-}
+export function PaymentStatsHeader() {
+  const { data: response, isLoading } = useApiQuery<{ data: PaymentSummary }>(
+    paymentKeys.summary(),
+    '/payments/summary'
+  );
 
-export function PaymentStatsHeader({ stats, isLoading }: PaymentStatsHeaderProps) {
+  const stats = response?.data;
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -30,27 +32,27 @@ export function PaymentStatsHeader({ stats, isLoading }: PaymentStatsHeaderProps
   const cards = [
     {
       title: 'Total Collected',
-      value: `${(stats?.totalCollected || 0).toLocaleString()} DA`,
-      icon: DollarSign,
+      value: `${Number(stats?.collected || 0).toLocaleString()} DZD`,
+      icon: CheckCircle,
       color: 'text-emerald-600 bg-emerald-500/10',
     },
     {
-      title: 'Pending Amount',
-      value: `${(stats?.pendingAmount || 0).toLocaleString()} DA`,
-      icon: Clock,
-      color: 'text-amber-600 bg-amber-500/10',
+      title: 'Outstanding Balance',
+      value: `${Number(stats?.outstanding || 0).toLocaleString()} DZD`,
+      icon: DollarSign,
+      color: 'text-blue-600 bg-blue-500/10',
     },
     {
       title: 'Overdue Amount',
-      value: `${(stats?.overdueAmount || 0).toLocaleString()} DA`,
+      value: `${Number(stats?.overdue || 0).toLocaleString()} DZD`,
       icon: AlertCircle,
       color: 'text-rose-600 bg-rose-500/10',
     },
     {
-      title: 'Total Invoices',
-      value: stats?.totalInvoices || 0,
-      icon: FileText,
-      color: 'text-blue-600 bg-blue-500/10',
+      title: `Due in Next ${stats?.dueSoonDays || 7} Days`,
+      value: `${Number(stats?.dueSoon || 0).toLocaleString()} DZD`,
+      icon: Clock,
+      color: 'text-amber-600 bg-amber-500/10',
     },
   ];
 

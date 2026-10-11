@@ -1,64 +1,74 @@
-// app/dashboard/payments/payments-client.tsx
 'use client';
 
 import { useState } from 'react';
 import { useApiQuery } from '@/hooks/use-api';
-import {
-  PaymentRecord,
-  PaymentStatus,
-  PaymentsResponse,
-  buildPaymentsApiPath,
-  paymentsQueryKey,
-} from '@/lib/queries/payments';
+import { InvoiceRecord, InvoiceStatus, paymentKeys } from '@/lib/queries/payments';
 import { PaymentStatsHeader } from './components/payment-stats-header';
+import { UpcomingPaymentsWidget } from './components/upcoming-payments-widget';
 import { PaymentTable } from './components/payment-table';
 import { RecordPaymentModal } from './components/record-payment-modal';
-import { MarkPaidModal } from './components/mark-paid-modal';
-import { EditPaymentModal } from './components/edit-payment-modal';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Search, Calendar } from 'lucide-react';
+import { Search, Calendar } from 'lucide-react';
+
+interface InvoicesApiResponse {
+  success: boolean;
+  data: InvoiceRecord[];
+  pagination: { page: number; limit: number; total: number; totalPages: number };
+}
 
 export function PaymentsClient({ currentMonthStr }: { currentMonthStr: string }) {
   const [activeMonth, setActiveMonth] = useState<string>(currentMonthStr);
-  const [activeTab, setActiveTab] = useState<PaymentStatus | 'ALL'>('ALL');
+  const [activeTab, setActiveTab] = useState<InvoiceStatus | 'ALL'>('ALL');
   const [search, setSearch] = useState('');
-  
-  const [recordModalOpen, setRecordModalOpen] = useState(false);
-  const [settlePayment, setSettlePayment] = useState<PaymentRecord | null>(null);
-  const [editPayment, setEditPayment] = useState<PaymentRecord | null>(null);
 
-  const queryParams = {
-    month: activeMonth,
-    status: activeTab,
-    search,
+  const [selectedInvoice, setSelectedInvoice] = useState<InvoiceRecord | null>(null);
+
+  const filters = {
+    month: activeMonth || undefined,
+    status: activeTab === 'ALL' ? undefined : activeTab,
   };
 
-  const { data: response, isLoading } = useApiQuery<PaymentsResponse>(
-    paymentsQueryKey(queryParams),
-    buildPaymentsApiPath(queryParams)
+  const { data: response, isLoading } = useApiQuery<InvoicesApiResponse>(
+    paymentKeys.invoices(filters),
+    `/invoices?${new URLSearchParams(
+      Object.entries({
+        ...(filters.month ? { month: filters.month } : {}),
+        ...(filters.status ? { status: filters.status } : {}),
+      })
+    ).toString()}`
   );
 
-  const payments = response?.data.payments || [];
-  const stats = response?.data.stats;
+  const invoices = response?.data || [];
+
+  // Client-side student name filter if search is active
+  const filteredInvoices = invoices.filter((inv) => {
+    if (!search.trim()) return true;
+    const fullName = `${inv.student.firstName} ${inv.student.lastName}`.toLowerCase();
+    return fullName.includes(search.toLowerCase());
+  });
 
   return (
     <div className="space-y-6">
-      {/* Top Header & Summary Stats */}
-      <PaymentStatsHeader stats={stats} isLoading={isLoading} />
+      {/* Financial Summary Cards */}
+      <PaymentStatsHeader />
 
-      {/* Actions Toolbar & Filters */}
+      {/* Upcoming / Overdue Attention Widget */}
+      <UpcomingPaymentsWidget />
+
+      {/* Filters & Search Toolbar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-card p-4 rounded-xl border shadow-sm">
         <div className="flex flex-wrap items-center gap-3 flex-1">
           <Tabs
             value={activeTab}
-            onValueChange={(val) => setActiveTab(val as PaymentStatus | 'ALL')}
+            onValueChange={(val) => setActiveTab(val as InvoiceStatus | 'ALL')}
             className="w-full sm:w-auto"
           >
             <TabsList>
               <TabsTrigger value="ALL">All</TabsTrigger>
-              <TabsTrigger value="PENDING">Pending / Overdue</TabsTrigger>
+              <TabsTrigger value="PENDING">Pending</TabsTrigger>
+              <TabsTrigger value="PARTIALLY_PAID">Partial</TabsTrigger>
+              <TabsTrigger value="OVERDUE">Overdue</TabsTrigger>
               <TabsTrigger value="PAID">Paid</TabsTrigger>
             </TabsList>
           </Tabs>
@@ -79,41 +89,24 @@ export function PaymentsClient({ currentMonthStr }: { currentMonthStr: string })
               type="month"
               value={activeMonth}
               onChange={(e) => setActiveMonth(e.target.value)}
-              className="w-auto h-9"
+              className="w-auto h-9 text-xs"
             />
           </div>
         </div>
-
-        <Button onClick={() => setRecordModalOpen(true)} className="gap-2">
-          <Plus className="w-4 h-4" /> Record Payment
-        </Button>
       </div>
 
-      {/* Main Table */}
+      {/* Invoices Table */}
       <PaymentTable
-        payments={payments}
+        invoices={filteredInvoices}
         isLoading={isLoading}
-        onSettle={(p) => setSettlePayment(p)}
-        onEdit={(p) => setEditPayment(p)}
+        onRecordPayment={(inv) => setSelectedInvoice(inv)}
       />
 
-      {/* Modals */}
+      {/* Record Payment Modal */}
       <RecordPaymentModal
-        open={recordModalOpen}
-        onOpenChange={setRecordModalOpen}
-        activeMonth={activeMonth}
-      />
-
-      <MarkPaidModal
-        payment={settlePayment}
-        onOpenChange={(open) => !open && setSettlePayment(null)}
-        activeMonth={activeMonth}
-      />
-
-      <EditPaymentModal
-        payment={editPayment}
-        onOpenChange={(open) => !open && setEditPayment(null)}
-        activeMonth={activeMonth}
+        invoice={selectedInvoice}
+        onOpenChange={(open) => !open && setSelectedInvoice(null)}
+        filters={filters}
       />
     </div>
   );

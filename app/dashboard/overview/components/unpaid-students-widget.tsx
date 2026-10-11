@@ -4,19 +4,21 @@ import Link from "next/link";
 import { AlertCircle, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { PendingPayment } from "@/lib/queries/dashboard";
+import { UpcomingInvoiceItem } from "@/lib/queries/dashboard";
 
 interface UnpaidStudentsWidgetProps {
-  payments?: PendingPayment[];
-  totalOutstanding?: number;
+  invoices?: UpcomingInvoiceItem[];
+  totalOutstanding?: string;
   isLoading: boolean;
 }
 
 export function UnpaidStudentsWidget({
-  payments = [],
-  totalOutstanding = 0,
+  invoices = [],
+  totalOutstanding = "0",
   isLoading,
 }: UnpaidStudentsWidgetProps) {
+  const numericOutstanding = Number(totalOutstanding);
+
   return (
     <Card className="col-span-1 lg:col-span-3">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -27,7 +29,7 @@ export function UnpaidStudentsWidget({
           <CardDescription>
             Total Pending:{" "}
             <span className="font-semibold text-foreground">
-              {totalOutstanding.toLocaleString()} DA
+              {numericOutstanding.toLocaleString()} DZD
             </span>
           </CardDescription>
         </div>
@@ -36,7 +38,7 @@ export function UnpaidStudentsWidget({
           size="sm"
           nativeButton={false}
           render={
-            <Link href="/dashboard/payments?status=PENDING" className="flex items-center gap-1">
+            <Link href="/dashboard/payments" className="flex items-center gap-1">
               View All <ChevronRight className="h-4 w-4" />
             </Link>
           }
@@ -49,43 +51,46 @@ export function UnpaidStudentsWidget({
               <div key={i} className="h-12 w-full animate-pulse rounded bg-muted" />
             ))}
           </div>
-        ) : payments.length === 0 ? (
-          <div className="p-6 text-center text-muted-foreground">
+        ) : invoices.length === 0 ? (
+          <div className="p-6 text-center text-muted-foreground text-xs">
             All student payments are currently up to date!
           </div>
         ) : (
           <div className="space-y-3">
-            {payments?.map((payment) => (
-              <div
-                key={payment.id}
-                className="flex items-center justify-between p-3 rounded-lg border bg-muted/40"
-              >
-                <div>
-                  <p className="font-medium text-sm">
-                    {payment.student.firstName} {payment.student.lastName}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {payment.student.phone || "No phone registered"}
-                  </p>
+            {invoices.map((inv) => {
+              const balance = Number(inv.outstandingBalance);
+              return (
+                <div
+                  key={inv.id}
+                  className="flex items-center justify-between p-3 rounded-lg border bg-muted/40 text-xs"
+                >
+                  <div>
+                    <p className="font-medium text-foreground">
+                      {inv.student.firstName} {inv.student.lastName}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {inv.enrollment?.group?.name || "General"} • {inv.student.phone || "No phone"}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-amber-600 text-sm">
+                      {balance.toLocaleString()} DZD
+                    </p>
+                    <Button
+                      variant="link"
+                      size="sm"
+                      nativeButton={false}
+                      className="h-auto p-0 text-[11px]"
+                      render={
+                        <Link href={`/dashboard/payments?search=${encodeURIComponent(inv.student.firstName)}`}>
+                          Record Payment
+                        </Link>
+                      }
+                    />
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-bold text-sm text-amber-600">
-                    {payment.amount.toLocaleString()} DA
-                  </p>
-                  <Button
-                    variant="link"
-                    size="sm"
-                    nativeButton={false}
-                    className="h-auto p-0 text-xs"
-                    render={
-                      <Link href={`/dashboard/payments?search=${payment.student.firstName}`}>
-                        Record Payment
-                      </Link>
-                    }
-                  />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </CardContent>

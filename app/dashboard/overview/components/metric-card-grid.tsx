@@ -1,6 +1,6 @@
 "use client";
 
-import { Users, UserCheck, Calendar, AlertCircle, Percent, Banknote } from "lucide-react";
+import { Users, UserCheck, Calendar, AlertCircle, Percent, Banknote, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardStats } from "@/lib/queries/dashboard";
 
@@ -15,38 +15,38 @@ export function MetricCardGrid({ stats, isLoading }: MetricCardGridProps) {
       title: "Total Students",
       value: stats?.totalStudents ?? 0,
       icon: Users,
-      description: "Enrolled students",
+      description: "Enrolled students[cite: 40]",
     },
     {
       title: "Active Students",
       value: stats?.activeStudents ?? 0,
       icon: UserCheck,
-      description: "Currently taking classes",
+      description: "Currently taking classes[cite: 40]",
     },
     {
       title: "Today's Sessions",
       value: stats?.todaySessionsCount ?? 0,
       icon: Calendar,
-      description: "Scheduled for today",
+      description: "Scheduled for today[cite: 40]",
     },
     {
-      title: "Unpaid Students",
+      title: "Unpaid / Overdue",
       value: stats?.unpaidCount ?? 0,
       icon: AlertCircle,
-      description: "Pending or overdue",
-      isWarning: Boolean(stats?.unpaidCount && stats.unpaidCount > 0),
+      description: `${(stats?.overdueBalance ?? 0).toLocaleString()} DZD overdue`,
+      isWarning: Boolean(stats?.overdueInvoicesCount && stats.overdueInvoicesCount > 0),
     },
     {
       title: "Attendance Rate",
       value: stats ? `${stats.attendanceRate}%` : "0%",
       icon: Percent,
-      description: "Average overall rate",
+      description: "Average overall rate[cite: 40]",
     },
     {
       title: "Monthly Revenue",
-      value: stats ? `${stats.monthlyRevenue.toLocaleString()} DA` : "0 DA",
+      value: stats ? `${stats.monthlyRevenue.toLocaleString()} DZD` : "0 DZD",
       icon: Banknote,
-      description: "Current month total",
+      description: "Received this month[cite: 40]",
     },
   ];
 
@@ -68,9 +68,9 @@ export function MetricCardGrid({ stats, isLoading }: MetricCardGridProps) {
               ) : (
                 <div className="text-2xl font-bold">{card.value}</div>
               )}
-              <p className="text-xs text-muted-foreground mt-1">
+              {/* <p className="text-xs text-muted-foreground mt-1">
                 {card.description}
-              </p>
+              </p> */}
             </CardContent>
           </Card>
         );

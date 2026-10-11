@@ -8,13 +8,19 @@ export interface ApiResponse<T> {
 }
 
 // --- Data Models ---
+
 export interface DashboardStats {
   totalStudents: number;
   activeStudents: number;
   todaySessionsCount: number;
-  unpaidCount: number;
   attendanceRate: number;
   monthlyRevenue: number;
+  unpaidCount: number;
+  outstandingBalance: number;
+  overdueInvoicesCount: number;
+  overdueBalance: number;
+  dueSoonInvoicesCount: number;
+  dueSoonBalance: number;
 }
 
 export interface ScheduleSlot {
@@ -76,13 +82,54 @@ export interface PaymentsData {
   payments: PendingPayment[];
 }
 
+
+export interface PaymentSummaryResponse {
+  collected: string;
+  outstanding: string;
+  overdue: string;
+  dueSoon: string;
+  dueSoonDays: number;
+  asOf: string;
+}
+
+export interface UpcomingInvoiceItem {
+  id: string;
+  amount: string;
+  status: string;
+  dueDate: string;
+  outstandingBalance: string;
+  attentionStatus: "OVERDUE" | "DUE_SOON";
+  daysOverdue?: number | null;
+  daysUntilDue?: number | null;
+  student: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    phone?: string | null;
+  };
+  enrollment: {
+    group: {
+      name: string;
+    };
+  };
+}
+
+export interface UpcomingPaymentsResponse {
+  invoices: UpcomingInvoiceItem[];
+  summary: {
+    total: number;
+    overdue: number;
+    dueSoon: number;
+    outstandingAmount: string;
+  };
+}
 // --- Hooks ---
 
 /** Fetches overall stats for MetricCardGrid */
 export function useDashboardStats() {
   return useApiQuery<DashboardStats>(
     ["dashboard-stats"],
-    "/dashboard-stats"
+    "/dashboard/stats"
   );
 }
 
