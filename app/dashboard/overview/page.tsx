@@ -24,6 +24,7 @@ export default function DashboardPage() {
 
   const upcomingData = upcomingResponse?.data;
 
+  console.log("stats:", stats);
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6 p-2">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">

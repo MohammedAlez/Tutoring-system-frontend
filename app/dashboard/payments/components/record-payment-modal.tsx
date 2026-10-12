@@ -19,13 +19,28 @@ interface RecordPaymentModalProps {
 }
 
 export function RecordPaymentModal({ invoice, onOpenChange, filters }: RecordPaymentModalProps) {
-  const outstanding = Number(invoice?.outstandingBalance ?? invoice?.amount ?? 0);
+  // Calculate total paid from the payments array, fallback to paidAmount if present
+  const totalPaid = invoice?.payments && invoice.payments.length > 0
+    ? invoice.payments.reduce((sum, p) => sum + Number(p.amount || 0), 0)
+    : Number(invoice?.paidAmount ?? 0);
+
+  const totalAmount = Number(invoice?.amount ?? 0);
+
+  // Compute precise outstanding balance: total amount minus total payments
+  const outstanding = invoice?.outstandingBalance !== undefined
+    ? Number(invoice.outstandingBalance)
+    : Math.max(0, totalAmount - totalPaid);
+
   const [amount, setAmount] = useState<string>(outstanding.toString());
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('CASH');
   const [paidAt, setPaidAt] = useState<string>(new Date().toISOString().split('T')[0]);
   const [note, setNote] = useState('');
 
   const queryClient = useQueryClient();
+
+  // Calculate remaining balance after this proposed payment input
+  const enteredAmount = parseFloat(amount) || 0;
+  const remainingBalance = Math.max(0, outstanding - enteredAmount);
 
   const recordMutation = useApiMutation<
     void,
@@ -50,7 +65,7 @@ export function RecordPaymentModal({ invoice, onOpenChange, filters }: RecordPay
         note: note.trim() || undefined,
       },
       {
-        onSuccess: async() => {
+        onSuccess: async () => {
           onOpenChange(false);
           setNote('');
           await Promise.all([
@@ -90,16 +105,22 @@ export function RecordPaymentModal({ invoice, onOpenChange, filters }: RecordPay
             </span>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <Label htmlFor="pay-amount">Amount Received (DZD)</Label>
             <Input
               id="pay-amount"
               type="number"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => {(Number(e.target.value) <= outstanding ? setAmount(e.target.value) : null)}}
               max={outstanding}
               required
             />
+            <p className="text-[11px] text-muted-foreground flex justify-between pt-0.5">
+              <span>Remaining balance after payment:</span>
+              <span className="font-semibold text-foreground">
+                {remainingBalance.toLocaleString()} DZD
+              </span>
+            </p>
           </div>
 
           <div className="space-y-2">

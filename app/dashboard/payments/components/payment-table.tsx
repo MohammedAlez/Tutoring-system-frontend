@@ -89,8 +89,14 @@ export function PaymentTable({ invoices, isLoading, onRecordPayment }: PaymentTa
           ) : (
             invoices.map((inv) => {
               const amount = Number(inv.amount);
-              const paid = Number(inv.paidAmount ?? 0);
-              const balance = Number(inv.outstandingBalance ?? Math.max(0, amount - paid));
+              
+              // Sum up all payments from the array, with fallback to paidAmount
+              const paid = inv.payments && inv.payments.length > 0
+                ? inv.payments.reduce((sum, p) => sum + Number(p.amount || 0), 0)
+                : Number(inv.paidAmount ?? 0);
+
+              // Calculate balance due: total amount minus total paid
+              const balance = Math.max(0, amount - paid);
               const canPay = inv.status !== 'PAID' && inv.status !== 'CANCELLED' && balance > 0;
 
               return (
